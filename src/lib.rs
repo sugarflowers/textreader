@@ -2,11 +2,11 @@ use binaryfile::BinaryReader;
 use sjis::{decode, is_sjis};
 use std::io::{self};
 
-pub struct Reader {
+pub struct TextReader {
     pub reader: BinaryReader,
 }
 
-impl Reader {
+impl TextReader {
     pub fn open(filename: &str) -> Result<Self, io::Error> {
         Ok(Self {
             reader : BinaryReader::open(filename)?,
@@ -14,7 +14,7 @@ impl Reader {
     }
 }
 
-impl Iterator for Reader {
+impl Iterator for TextReader {
     type Item = Result<String, io::Error>; 
     fn next( &mut self ) -> Option<Self::Item> {
         match self.reader.next() {
@@ -33,7 +33,7 @@ impl Iterator for Reader {
 
 #[test]
 fn file_read_test() {
-    let rd = Reader::open("test.txt").unwrap();
+    let rd = TextReader::open("test.txt").unwrap();
     for line in rd {
         println!("{}", line.unwrap());
     }
