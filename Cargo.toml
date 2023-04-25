@@ -1,0 +1,11 @@
+[package]
+name = "textreader"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+sjis = { git = "https://github.com/sugarflowers/sjis.git" }
+binaryfile = { git = "https://github.com/sugarflowers/binaryfile.git" }
+
