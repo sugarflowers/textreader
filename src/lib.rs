@@ -12,6 +12,15 @@ impl TextReader {
             reader : BinaryReader::open(filename)?,
         })
     }
+    pub fn read(&mut self) -> String {
+        let buf = self.reader.read().unwrap();
+
+        if is_sjis(&buf) {
+            decode(buf)
+        } else {
+            String::from_utf8(buf).unwrap()
+        }
+    }
 }
 
 impl Iterator for TextReader {
@@ -37,5 +46,11 @@ fn file_read_test() {
     for line in rd {
         println!("{}", line.unwrap());
     }
+}
+
+#[test]
+fn file_read_once() {
+    let rd = TextReader::open("test.txt").unwrap().read();
+    println!("{}", rd);
 }
 
