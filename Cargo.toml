@@ -8,4 +8,5 @@ edition = "2021"
 [dependencies]
 sjis = { git = "https://github.com/sugarflowers/sjis.git" }
 binaryfile = { git = "https://github.com/sugarflowers/binaryfile.git" }
+anyhow = "1.0.71"
 
