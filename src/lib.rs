@@ -25,7 +25,7 @@ impl TextReader {
 
 impl Iterator for TextReader {
     type Item = Result<String>;
-    fn next( &mut self ) -> Option<Self::Item> {
+    fn next(&mut self) -> Option<Self::Item> {
         match self.reader.next() {
             Some(Ok(line)) => {
                 if is_sjis(&line) {
@@ -42,15 +42,15 @@ impl Iterator for TextReader {
 
 #[test]
 fn file_read_test() {
-    let rd = TextReader::open("test.txt").unwrap();
-    for line in rd {
+    let reader = TextReader::open("test.txt").unwrap();
+    for line in reader {
         println!("{}", line.unwrap());
     }
 }
 
 #[test]
 fn file_read_once() {
-    let rd = TextReader::open("test.txt").unwrap().read();
-    println!("{}", rd.unwrap());
+    let reader = TextReader::open("test.txt").unwrap().read();
+    println!("{}", reader.unwrap());
 }
 
