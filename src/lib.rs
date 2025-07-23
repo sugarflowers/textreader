@@ -1,6 +1,7 @@
 use binaryfile::BinaryReader;
 use sjis::{decode, is_sjis};
 use anyhow::{anyhow, Result};
+use std::io::Error;
 
 pub struct TextReader {
     pub reader: BinaryReader,
@@ -14,7 +15,7 @@ impl TextReader {
     }
 
     pub fn read(&mut self) -> Result<String> {
-        let buf = self.reader.read().map_err(|e| anyhow!(e))?;
+        let buf = self.reader.read().map_err(|e: Error| anyhow!(e))?;
         if is_sjis(&buf) {
             Ok(decode(buf))
         } else {
@@ -53,4 +54,3 @@ fn file_read_once() {
     let reader = TextReader::open("test.txt").unwrap().read();
     println!("{}", reader.unwrap());
 }
-
