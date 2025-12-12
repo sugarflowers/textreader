@@ -29,7 +29,7 @@ impl Iterator for TextReader {
         match self.reader.next() {
             Some(Ok(line)) => {
                 if is_sjis(&line) {
-                    Some(Ok(decode(&line)))
+                    Some(Ok(decode(line)))
                 } else {
                     Some(String::from_utf8(line).map_err(|e| e.into()))
                 }
