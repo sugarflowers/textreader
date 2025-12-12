@@ -16,7 +16,7 @@ impl TextReader {
     pub fn read(&mut self) -> Result<String> {
         let buf = self.reader.read()?;
         if is_sjis(&buf) {
-            Ok(decode(&buf))
+            Ok(decode(buf))
         } else {
             Ok(String::from_utf8(buf)?)
         }
