@@ -1,7 +1,6 @@
 use binaryfile::BinaryReader;
 use sjis::{decode, is_sjis};
-use anyhow::{anyhow, Result};
-use std::io::Error;
+use anyhow::Result;
 
 pub struct TextReader {
     pub reader: BinaryReader,
@@ -10,16 +9,16 @@ pub struct TextReader {
 impl TextReader {
     pub fn open(filename: &str) -> Result<Self> {
         Ok(Self {
-            reader : BinaryReader::open(filename).map_err(|e| anyhow!(e))?,
+            reader : BinaryReader::open(filename)?,
         })
     }
 
     pub fn read(&mut self) -> Result<String> {
-        let buf = self.reader.read().map_err(|e: Error| anyhow!(e))?;
+        let buf = self.reader.read()?;
         if is_sjis(&buf) {
-            Ok(decode(buf))
+            Ok(decode(&buf))
         } else {
-            Ok(String::from_utf8(buf).map_err(|e| anyhow!(e))?)
+            Ok(String::from_utf8(buf)?)
         }
     }
 }
@@ -30,12 +29,12 @@ impl Iterator for TextReader {
         match self.reader.next() {
             Some(Ok(line)) => {
                 if is_sjis(&line) {
-                    Some(Ok(decode(line)))
+                    Some(Ok(decode(&line)))
                 } else {
-                    Some(Ok(String::from_utf8(line).unwrap()))
+                    Some(String::from_utf8(line).map_err(|e| e.into()))
                 }
             }
-            Some(Err(e)) => Some(Err(anyhow!(e))),
+            Some(Err(e)) => Some(Err(e)),
             None => None,
         }
     }
