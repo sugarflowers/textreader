@@ -34,7 +34,7 @@ impl Iterator for TextReader {
                     Some(String::from_utf8(line).map_err(|e| e.into()))
                 }
             }
-            Some(Err(e)) => Some(Err(e)),
+            Some(Err(e)) => Some(Err(e.into())),
             None => None,
         }
     }
