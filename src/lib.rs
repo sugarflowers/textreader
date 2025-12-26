@@ -16,7 +16,7 @@ impl TextReader {
     pub fn read(&mut self) -> Result<String> {
         let buf = self.reader.read()?;
         if is_sjis(&buf) {
-            Ok(decode(buf))
+            Ok(decode(&buf))
         } else {
             Ok(String::from_utf8(buf)?)
         }
@@ -29,7 +29,7 @@ impl Iterator for TextReader {
         match self.reader.next() {
             Some(Ok(line)) => {
                 if is_sjis(&line) {
-                    Some(Ok(decode(line)))
+                    Some(Ok(decode(&line)))
                 } else {
                     Some(String::from_utf8(line).map_err(|e| e.into()))
                 }
