@@ -44,15 +44,16 @@ impl Iterator for TextReader {
 
 impl Iterator for TextReader {
     type Item = Result<String>;
-    let filename = self.reader.filename.clone();
+    //let filename = self.reader.filename.clone();
     
     fn next(&mut self) -> Option<Self::Item> {
         self.reader.next().map(|res| {
-            let line = res.with_context(|| format!("failed to read a line from {}", filename))?;
+            let line = res.with_context(|| format!("failed to read a line from {}", &self.reader.filename))?;
             if is_sjis(&line) {
                 Ok(decode(&line))
             } else {
-                String::from_utf8(line).map_err(Into::into)
+                String::from_utf8(line)
+                    .with_context(|| format!("failed to decode line as UTF-8 ({})",&self.reader.filename))?;
             }
         })
     }
