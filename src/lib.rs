@@ -23,6 +23,7 @@ impl TextReader {
     }
 }
 
+/*
 impl Iterator for TextReader {
     type Item = Result<String>;
     fn next(&mut self) -> Option<Self::Item> {
@@ -39,6 +40,23 @@ impl Iterator for TextReader {
         }
     }
 }
+*/
+
+impl Iterator for TextReader {
+    type Item = Result<String>;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        self.reader.next().map(|res| {
+            let line = res?; // anyhow::Result に変換される
+            if is_sjis(&line) {
+                Ok(decode(&line))
+            } else {
+                String::from_utf8(line).map_err(Into::into)
+            }
+        })
+    }
+}
+
 
 #[test]
 fn file_read_test() {
