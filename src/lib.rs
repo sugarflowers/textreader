@@ -55,7 +55,7 @@ impl Iterator for TextReader {
                 String::from_utf8(line)
                     .context(|| format!("failed to decode line as UTF-8 ({})",&self.reader.filename))?;
             }
-        }
+        })
     }
 }
 
