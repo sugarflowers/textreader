@@ -23,41 +23,27 @@ impl TextReader {
     }
 }
 
-/*
 impl Iterator for TextReader {
     type Item = Result<String>;
-    fn next(&mut self) -> Option<Self::Item> {
-        match self.reader.next() {
-            Some(Ok(line)) => {
-                if is_sjis(&line) {
-                    Some(Ok(decode(&line)))
-                } else {
-                    Some(String::from_utf8(line).map_err(|e| e.into()))
-                }
-            }
-            Some(Err(e)) => Some(Err(e.into())),
-            None => None,
-        }
-    }
-}
-*/
 
-impl Iterator for TextReader {
-    type Item = Result<String>;
-    //let filename = self.reader.filename.clone();
-    
     fn next(&mut self) -> Option<Self::Item> {
         self.reader.next().map(|res| {
-            let line = res.context(|| format!("failed to read a line from {}", &self.reader.filename))?;
+            let line = res.context(|| {
+                format!("failed to read a line from {}", &self.reader.filename)
+            })?;
+
             if is_sjis(&line) {
                 Ok(decode(&line))
             } else {
                 String::from_utf8(line)
-                    .context(|| format!("failed to decode line as UTF-8 ({})",&self.reader.filename))?
+                    .context(|| {
+                        format!("failed to decode line as UTF-8 ({})", &self.reader.filename)
+                    })
             }
         })
     }
 }
+
 
 
 #[test]
