@@ -28,13 +28,13 @@ impl Iterator for TextReader {
 
     fn next(&mut self) -> Option<Self::Item> {
         self.reader.next().map(|res| {
-            let line = res.context(|| "failed to read a line")?;
+            let line = res.context("failed to read a line")?;
 
             if is_sjis(&line) {
                 Ok(decode(&line))
             } else {
                 String::from_utf8(line)
-                    .context(|| "failed to decode line as UTF-8")
+                    .context("failed to decode line as UTF-8")
             }
         })
     }
